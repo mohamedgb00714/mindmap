@@ -22,8 +22,8 @@ export const TextInputSection: React.FC<TextInputSectionProps> = ({ onGenerate, 
   return (
     <Card className="w-full max-w-3xl mx-auto shadow-xl border-slate-200 dark:border-slate-800">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-amber-500" />
+        <CardTitle className="flex items-center gap-2 text-primary">
+          <Sparkles className="w-5 h-5 text-accent" />
           Transform Text to Mind Map
         </CardTitle>
         <CardDescription>
@@ -57,7 +57,7 @@ export const TextInputSection: React.FC<TextInputSectionProps> = ({ onGenerate, 
           whileTap={{ scale: 0.99 }}
         >
           <Button 
-            className="w-full h-12 text-lg font-semibold shadow-lg shadow-primary/20" 
+            className="w-full h-12 text-lg font-semibold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90" 
             onClick={handleGenerate}
             disabled={!text.trim() || isLoading}
           >

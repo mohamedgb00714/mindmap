@@ -47,13 +47,13 @@ const Index = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-12 space-y-12">
-        <section className="text-center space-y-4 max-w-2xl mx-auto">
+        <section className="text-center space-y-4 max-w-3xl mx-auto">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white"
           >
-            Visualize Your <span className="text-primary">Thoughts</span>
+            Transform Text into <span className="text-secondary">Visual Insights</span> Instantly
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -61,7 +61,7 @@ const Index = () => {
             transition={{ delay: 0.1 }}
             className="text-lg text-slate-600 dark:text-slate-400"
           >
-            Turn complex text into clear, hierarchical mind maps instantly using advanced AI.
+            Unlock your ideas. Turn complex notes, articles, or transcripts into clear, actionable mind maps effortlessly.
           </motion.p>
         </section>
 
@@ -110,9 +110,9 @@ const Index = () => {
         {!mindMapData && !isLoading && (
           <section className="grid md:grid-cols-3 gap-8 pt-12">
             {[
-              { title: "AI Powered", desc: "Uses state-of-the-art LLMs to understand context and hierarchy." },
-              { title: "Interactive", desc: "Zoom, pan, and rearrange nodes to perfect your visualization." },
-              { title: "Fast & Secure", desc: "Instant generation with privacy-first data handling." }
+              { title: "Innovative AI", desc: "Uses state-of-the-art LLMs to understand context and hierarchy." },
+              { title: "Clear Visualization", desc: "Zoom, pan, and rearrange nodes to perfect your mental model." },
+              { title: "Efficient Workflow", desc: "Instant generation with privacy-first data handling." }
             ].map((feature, i) => (
               <motion.div 
                 key={i}
@@ -121,7 +121,7 @@ const Index = () => {
                 transition={{ delay: 0.2 + i * 0.1 }}
                 className="p-6 rounded-2xl bg-white dark:bg-slate-900 border shadow-sm"
               >
-                <h3 className="font-bold mb-2">{feature.title}</h3>
+                <h3 className="font-bold mb-2 text-primary">{feature.title}</h3>
                 <p className="text-sm text-slate-500">{feature.desc}</p>
               </motion.div>
             ))}
