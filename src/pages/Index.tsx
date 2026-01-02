@@ -1,63 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { TextInputSection } from "@/components/TextInputSection";
 import { MindMapViewer } from "@/components/MindMapViewer";
 import { Node, Edge } from "reactflow";
 import { motion, AnimatePresence } from "framer-motion";
 import { showSuccess, showError } from "@/utils/toast";
+import { generateMindMapData } from "@/lib/ai-service";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Key } from "lucide-react";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [mindMapData, setMindMapData] = useState<{ nodes: Node[]; edges: Edge[] } | null>(null);
+  const [apiKey, setApiKey] = useState("");
+
+  // Load API key from local storage on mount
+  useEffect(() => {
+    const savedKey = localStorage.getItem("openrouter_api_key");
+    if (savedKey) setApiKey(savedKey);
+  }, []);
+
+  const handleApiKeyChange = (val: string) => {
+    setApiKey(val);
+    localStorage.setItem("openrouter_api_key", val);
+  };
 
   const handleGenerate = async (text: string) => {
+    if (!apiKey) {
+      showError("Please enter an OpenRouter API key first.");
+      return;
+    }
+
     setIsLoading(true);
-    
-    // Mocking AI generation for now as per task "Integrate AI API" which is pending
-    setTimeout(() => {
-      try {
-        const mockNodes: Node[] = [
-          { 
-            id: '1', 
-            type: 'input',
-            data: { label: 'Central Topic' }, 
-            position: { x: 250, y: 0 },
-            style: { background: '#3b82f6', color: '#fff', borderRadius: '8px', padding: '10px' }
-          },
-          { 
-            id: '2', 
-            data: { label: 'Key Concept A' }, 
-            position: { x: 100, y: 100 },
-            style: { background: '#fff', border: '2px solid #3b82f6', borderRadius: '8px' }
-          },
-          { 
-            id: '3', 
-            data: { label: 'Key Concept B' }, 
-            position: { x: 400, y: 100 },
-            style: { background: '#fff', border: '2px solid #3b82f6', borderRadius: '8px' }
-          },
-          { 
-            id: '4', 
-            data: { label: 'Detail A1' }, 
-            position: { x: 0, y: 200 },
-            style: { background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '8px' }
-          },
-        ];
-
-        const mockEdges: Edge[] = [
-          { id: 'e1-2', source: '1', target: '2', animated: true },
-          { id: 'e1-3', source: '1', target: '3', animated: true },
-          { id: 'e2-4', source: '2', target: '4' },
-        ];
-
-        setMindMapData({ nodes: mockNodes, edges: mockEdges });
-        showSuccess("Mind map generated successfully!");
-      } catch (err) {
-        showError("Failed to generate mind map. Please try again.");
-      } finally {
-        setIsLoading(false);
-      }
-    }, 2000);
+    try {
+      const data = await generateMindMapData(text, apiKey);
+      setMindMapData(data);
+      showSuccess("Mind map generated successfully!");
+    } catch (err: any) {
+      showError(err.message || "Failed to generate mind map. Please check your API key.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -79,6 +63,24 @@ const Index = () => {
           >
             Turn complex text into clear, hierarchical mind maps instantly using advanced AI.
           </motion.p>
+        </section>
+
+        <section className="max-w-md mx-auto space-y-2">
+          <div className="flex items-center gap-2 text-sm font-medium text-slate-500 mb-1">
+            <Key className="w-4 h-4" />
+            <Label htmlFor="api-key">OpenRouter API Key</Label>
+          </div>
+          <Input 
+            id="api-key"
+            type="password" 
+            placeholder="sk-or-v1-..." 
+            value={apiKey}
+            onChange={(e) => handleApiKeyChange(e.target.value)}
+            className="bg-white dark:bg-slate-900"
+          />
+          <p className="text-[10px] text-slate-400 text-center">
+            Your key is stored locally in your browser and never sent to our servers.
+          </p>
         </section>
 
         <section>
