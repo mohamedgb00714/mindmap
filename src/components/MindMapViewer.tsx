@@ -1,11 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useCallback } from 'react';
 import ReactFlow, { 
   Background, 
   Controls, 
   MiniMap,
   Node,
   Edge,
-  ConnectionLineType
+  ConnectionLineType,
+  useNodesState,
+  useEdgesState,
+  Panel
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -14,34 +17,46 @@ interface MindMapViewerProps {
   edges: Edge[];
 }
 
-export const MindMapViewer: React.FC<MindMapViewerProps> = ({ nodes, edges }) => {
+export const MindMapViewer: React.FC<MindMapViewerProps> = ({ nodes: initialNodes, edges: initialEdges }) => {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  // Update nodes/edges when props change (e.g., new generation)
+  React.useEffect(() => {
+    setNodes(initialNodes);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges, setNodes, setEdges]);
+
   const defaultEdgeOptions = {
     type: ConnectionLineType.SmoothStep,
     animated: true,
-    style: { strokeWidth: 2 },
+    style: { strokeWidth: 2, stroke: '#94a3b8' },
   };
 
   return (
-    <div className="w-full h-[600px] rounded-xl border bg-white dark:bg-slate-900 overflow-hidden shadow-inner">
+    <div className="w-full h-[700px] rounded-xl border bg-white dark:bg-slate-900 overflow-hidden shadow-inner relative">
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
         defaultEdgeOptions={defaultEdgeOptions}
         fitView
         className="bg-slate-50/50 dark:bg-slate-950/50"
+        minZoom={0.2}
+        maxZoom={4}
       >
-        <Background color="#94a3b8" gap={20} />
+        <Background color="#cbd5e1" gap={20} size={1} />
         <Controls />
         <MiniMap 
-          nodeStrokeColor={(n) => {
-            if (n.type === 'input') return '#0041d0';
-            return '#ff0072';
-          }}
-          nodeColor={(n) => {
-            if (n.type === 'input') return '#0041d0';
-            return '#fff';
-          }}
+          nodeStrokeWidth={3}
+          zoomable
+          pannable
+          className="bg-white dark:bg-slate-900 border rounded-lg"
         />
+        <Panel position="top-right" className="bg-white/80 dark:bg-slate-800/80 p-2 rounded-md border text-xs font-medium shadow-sm">
+          💡 Drag nodes to rearrange
+        </Panel>
       </ReactFlow>
     </div>
   );
