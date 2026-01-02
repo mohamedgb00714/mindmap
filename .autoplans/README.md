@@ -23,7 +23,10 @@ This project is managed using [autoplans.dev](https://autoplans.dev) - an AI-pow
 
 ### Installation
 
-1. Clone the repository
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/mohamedgb00714/mindmap.git
+   ```
 2. Install dependencies:
    ```bash
    npm install

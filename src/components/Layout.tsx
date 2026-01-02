@@ -48,7 +48,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
               <HelpCircle className="w-5 h-5" />
             </button>
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+            <a 
+              href="https://github.com/mohamedgb00714/mindmap" 
+              target="_blank" 
+              rel="noreferrer" 
+              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+            >
               <Github className="w-5 h-5" />
             </a>
             <Link to="/" className="bg-secondary text-secondary-foreground px-4 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity">
