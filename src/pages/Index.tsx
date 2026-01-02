@@ -97,10 +97,6 @@ const Index = () => {
             >
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold">Generated Mind Map</h2>
-                <div className="flex gap-2">
-                  <button className="text-sm font-medium px-3 py-1 rounded-md border hover:bg-slate-50 transition-colors">Export PNG</button>
-                  <button className="text-sm font-medium px-3 py-1 rounded-md border hover:bg-slate-50 transition-colors">Share</button>
-                </div>
               </div>
               <MindMapViewer nodes={mindMapData.nodes} edges={mindMapData.edges} />
             </motion.section>

@@ -16,12 +16,15 @@ export const generateMindMapData = async (text: string, apiKey: string): Promise
     1. The central topic should be the root node.
     2. Use 'default' type for nodes.
     3. Each node needs an 'id', 'data: { label: string }', and 'position: { x: number, y: number }'.
-    4. STYLING: Assign colors based on depth:
-       - Root: { background: '#1E3A8A', color: '#fff', border: '2px solid #1E3A8A', borderRadius: '8px', padding: '10px' }
-       - Level 1: { background: '#10B981', color: '#fff', border: '2px solid #10B981', borderRadius: '8px' }
-       - Level 2+: { background: '#fff', color: '#1E3A8A', border: '2px solid #1E3A8A', borderRadius: '8px' }
-       Add these to a 'style' object in each node.
-    5. Layout: Arrange nodes in a logical tree structure (root at top, children below).
+    4. LAYOUT: Arrange nodes in a horizontal tree structure to prevent overlap.
+       - Root at x: 0, y: 0.
+       - Level 1 children at x: 250, with varying y positions (e.g., -200, 0, 200).
+       - Level 2 children at x: 500, and so on.
+       - Ensure at least 150px vertical spacing between sibling nodes.
+    5. STYLING: You MUST include a 'style' object for every node:
+       - Root: { "background": "#1E3A8A", "color": "#ffffff", "border": "2px solid #1E3A8A", "borderRadius": "8px", "padding": "10px", "fontWeight": "bold", "width": 180 }
+       - Level 1: { "background": "#10B981", "color": "#ffffff", "border": "2px solid #10B981", "borderRadius": "8px", "padding": "8px", "width": 150 }
+       - Level 2+: { "background": "#ffffff", "color": "#1E3A8A", "border": "2px solid #1E3A8A", "borderRadius": "8px", "padding": "6px", "width": 120 }
     
     Rules for Edges:
     1. Edges need 'id', 'source', and 'target'.

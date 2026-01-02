@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import ReactFlow, { 
   Background, 
   Controls, 
@@ -8,24 +8,44 @@ import ReactFlow, {
   ConnectionLineType,
   useNodesState,
   useEdgesState,
-  Panel
+  Panel,
+  useReactFlow,
+  ReactFlowProvider
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+import { toPng } from 'html-to-image';
+import download from 'downloadjs';
+import { Button } from './ui/button';
+import { Download, Share2 } from 'lucide-react';
 
 interface MindMapViewerProps {
   nodes: Node[];
   edges: Edge[];
 }
 
-export const MindMapViewer: React.FC<MindMapViewerProps> = ({ nodes: initialNodes, edges: initialEdges }) => {
+const MindMapInner: React.FC<MindMapViewerProps> = ({ nodes: initialNodes, edges: initialEdges }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const { getNodes } = useReactFlow();
 
-  // Update nodes/edges when props change (e.g., new generation)
   React.useEffect(() => {
     setNodes(initialNodes);
     setEdges(initialEdges);
   }, [initialNodes, initialEdges, setNodes, setEdges]);
+
+  const onExport = useCallback(() => {
+    const element = document.querySelector('.react-flow__viewport') as HTMLElement;
+    if (!element) return;
+
+    toPng(element, {
+      backgroundColor: '#f8fafc',
+      style: {
+        transform: 'scale(1)',
+      },
+    }).then((dataUrl) => {
+      download(dataUrl, 'mind-map.png');
+    });
+  }, []);
 
   const defaultEdgeOptions = {
     type: ConnectionLineType.SmoothStep,
@@ -43,7 +63,7 @@ export const MindMapViewer: React.FC<MindMapViewerProps> = ({ nodes: initialNode
         defaultEdgeOptions={defaultEdgeOptions}
         fitView
         className="bg-slate-50/50 dark:bg-slate-950/50"
-        minZoom={0.2}
+        minZoom={0.1}
         maxZoom={4}
       >
         <Background color="#cbd5e1" gap={20} size={1} />
@@ -54,10 +74,26 @@ export const MindMapViewer: React.FC<MindMapViewerProps> = ({ nodes: initialNode
           pannable
           className="bg-white dark:bg-slate-900 border rounded-lg"
         />
-        <Panel position="top-right" className="bg-white/80 dark:bg-slate-800/80 p-2 rounded-md border text-xs font-medium shadow-sm">
+        <Panel position="top-right" className="flex gap-2">
+          <Button size="sm" variant="outline" className="bg-white/80 backdrop-blur" onClick={onExport}>
+            <Download className="w-4 h-4 mr-2" />
+            Export PNG
+          </Button>
+          <Button size="sm" variant="outline" className="bg-white/80 backdrop-blur">
+            <Share2 className="w-4 h-4 mr-2" />
+            Share
+          </Button>
+        </Panel>
+        <Panel position="bottom-left" className="bg-white/80 dark:bg-slate-800/80 p-2 rounded-md border text-xs font-medium shadow-sm">
           💡 Drag nodes to rearrange
         </Panel>
       </ReactFlow>
     </div>
   );
 };
+
+export const MindMapViewer: React.FC<MindMapViewerProps> = (props) => (
+  <ReactFlowProvider>
+    <MindMapInner {...props} />
+  </ReactFlowProvider>
+);
