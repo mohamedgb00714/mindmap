@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import ReactFlow, { 
   Background, 
   Controls, 
@@ -9,7 +9,6 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   Panel,
-  useReactFlow,
   ReactFlowProvider
 } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -26,7 +25,6 @@ interface MindMapViewerProps {
 const MindMapInner: React.FC<MindMapViewerProps> = ({ nodes: initialNodes, edges: initialEdges }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const { getNodes } = useReactFlow();
 
   React.useEffect(() => {
     setNodes(initialNodes);
